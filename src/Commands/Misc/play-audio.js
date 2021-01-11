@@ -1,7 +1,7 @@
 const Command = require('../../Structures/Command');
 const { MessageEmbed } = require('discord.js');
 const fs = require('fs');
-const audioPath = 'C:\\Users\\Zechariah\\Desktop\\Discord Bots\\Watson Amelia\\assets\\audioFiles';
+const audioPath = 'C:\\Users\\Zechariah\\Desktop\\Discord Bots\\Amelia\\assets\\audioFiles';
 const files = fs.readdirSync(audioPath);
 
 module.exports = class extends Command {
