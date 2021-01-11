@@ -17,38 +17,33 @@ module.exports = class extends Event {
 	async run(message) {
 		const mentionRegex = RegExp(`^<@!?${this.client.user.id}>$`);
 		const mentionRegexPrefix = RegExp(`^<@!?${this.client.user.id}> `);
-		let chosenPrefix;
 
 		if (message.author.bot) return;
 
-		if (message.guild) {
-			var settings = await GuildSchema.findOne({
-				guildID: message.guild.id
-			}, (err, guild) => {
-				if (err) console.error(err);
-				if (!guild) {
-					const newGuild = new GuildSchema({
-						_id: mongoose.Types.ObjectId(),
-						guildID: message.guild.id,
-						guildName: message.guild.name,
-						prefix: this.client.prefix,
-						xp: false,
-						levelUpMsg: false,
-						eco: false
-					});
+		const settings = await GuildSchema.findOne({
+			guildID: message.guild.id
+		}, (err, guild) => {
+			if (err) console.error(err);
+			if (!guild) {
+				const newGuild = new Guild({
+					_id: mongoose.Types.ObjectId(),
+					guildID: message.guild.id,
+					guildName: message.guild.name,
+					prefix: this.client.prefix,
+					xp: false,
+					levelUpMsg: false,
+					eco: false
+				});
 
-					newGuild.save();
-				}
-			});
-			chosenPrefix = settings.prefix;
-		} else {
-			chosenPrefix = this.client.prefix;
-		}
+				newGuild.save()
+					.then(result => console.log(result))
+					.catch(err => console.error(err));
+			}
+		});
 
-		if (message.content.match(mentionRegex) && message.guild) message.channel.send(`My prefix for ${message.guild.name} is \`${chosenPrefix}\`.`);
+		const prefix = message.guild ? settings.prefix : '!';
 
-		const prefix = message.content.match(mentionRegexPrefix) ?
-			message.content.match(mentionRegexPrefix)[0] : chosenPrefix;
+		if (message.content.match(mentionRegex) && message.guild) message.channel.send(`My prefix for ${message.guild.name} is \`${prefix}\`.`);
 
 		if (message.guild && !message.content.startsWith(prefix) && settings.xp) {
 			const randomXp = Math.floor(Math.random() * 29) + 1;
