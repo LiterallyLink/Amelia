@@ -1,0 +1,38 @@
+{
+  "name": "watson-amelia",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pie",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/opus": "^0.3.3",
+    "@extreme_hero/deeptype": "^1.0.1",
+    "aki-api": "^5.2.1",
+    "alexa-bot-api": "^0.1.4",
+    "amethyste-api": "^1.1.4",
+    "canvacord": "^5.0.8",
+    "common-tags": "^1.8.0",
+    "dayjs": "^1.9.8",
+    "discord-xp": "^1.1.7",
+    "discord.js": "^12.5.1",
+    "eslint": "^7.16.0",
+    "eslint-config-tesseract": "0.0.3",
+    "figlet": "^1.5.0",
+    "glob": "^7.1.6",
+    "hangcord": "0.0.5",
+    "humanize-duration": "^3.25.0",
+    "moment": "^2.29.1",
+    "moment-duration-format": "^2.3.2",
+    "mongoose": "^5.11.8",
+    "ms": "^2.1.3",
+    "node-superfetch": "^0.1.10",
+    "twemoji-parser": "^13.0.0",
+    "weather.js": "^0.1.0",
+    "youtube-sr": "^2.0.5",
+    "ytdl-core": "^4.4.1"
+  }
+}
