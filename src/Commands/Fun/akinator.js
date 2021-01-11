@@ -107,7 +107,8 @@ module.exports = class extends Command {
 						.setFooter(forceGuess ? 'Final Guess' : `Guess ${timesGuessed} - Total Questions: ${aki.currentStep + 1}`);
 					const msg = await message.channel.send(embed);
 					if (forceGuess === true) break;
-					msg.react('✅').then(() => msg.react('❌'));
+					['✅', '❌'].forEach(async el => await msg.react(el));
+
 
 					const reactionFilter = (reaction, user) => ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id;
 					await msg.awaitReactions(reactionFilter, {
