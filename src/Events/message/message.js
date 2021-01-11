@@ -4,9 +4,9 @@ const Event = require('../../Structures/Event');
 const ms = require('ms');
 const { MessageEmbed } = require('discord.js');
 const mongoose = require('mongoose');
-const GuildSchema = require('../../Models/guildSchema.js');
+const guildSchema = require('../../Models/guildSchema.js');
 const custom = require('../../Models/customCommand.js');
-const User = require('../../Models/userSchema.js');
+const userSchema = require('../../Models/userSchema.js');
 const Levels = require('discord-xp');
 const mongoURL = require('../../../config.json');
 
@@ -16,16 +16,15 @@ module.exports = class extends Event {
 
 	async run(message) {
 		const mentionRegex = RegExp(`^<@!?${this.client.user.id}>$`);
-		const mentionRegexPrefix = RegExp(`^<@!?${this.client.user.id}> `);
 
 		if (message.author.bot) return;
 
-		const settings = await GuildSchema.findOne({
+		const settings = await guildSchema.findOne({
 			guildID: message.guild.id
 		}, (err, guild) => {
 			if (err) console.error(err);
 			if (!guild) {
-				const newGuild = new Guild({
+				const newGuild = new guildSchema({
 					_id: mongoose.Types.ObjectId(),
 					guildID: message.guild.id,
 					guildName: message.guild.name,
@@ -37,7 +36,7 @@ module.exports = class extends Event {
 
 				newGuild.save()
 					.then(result => console.log(result))
-					.catch(err => console.error(err));
+					.catch(error => console.error(error));
 			}
 		});
 
@@ -72,7 +71,7 @@ module.exports = class extends Event {
 		}
 
 		if (command) {
-			const userData = await User.findOne({ User: message.author.id });
+			const userData = await userSchema.findOne({ userSchema: message.author.id });
 
 			if (userData && userData.Blacklist && !this.client.utils.checkOwner(message.author)) {
 				return;
