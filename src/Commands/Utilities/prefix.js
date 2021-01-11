@@ -16,20 +16,20 @@ module.exports = class extends Command {
 		});
 	}
 
-	async run(message, [prefix]) {
+	async run(message, [newPrefix]) {
 		const embed = new MessageEmbed();
 		const settings = await GuildSchema.findOne({ guildID: message.guild.id });
 
-		if (!prefix || prefix.length > 2) {
+		if (!newPrefix || newPrefix.length > 2) {
 			return message.channel.send(embed.setColor('RED').setDescription('Please provide a valid prefix.').setFooter('Prefixes can be a maximum of 2 characters.'));
 		}
 
 		await settings.updateOne({
-			prefix: prefix
+			prefix: newPrefix
 
 		});
 
-		return message.channel.send(embed.setColor('fce3b7').setDescription(`The server prefix has been updated to ${prefix}`));
+		return message.channel.send(embed.setColor('fce3b7').setDescription(`The server prefix has been updated to ${newPrefix}`));
 	}
 
 };
