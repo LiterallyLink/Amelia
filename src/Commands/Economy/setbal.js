@@ -15,12 +15,13 @@ module.exports = class extends Command {
 
 	async run(message, args) {
 		const target = message.mentions.users.first();
-		await this.client.economy.getCredits(message.guild.id, target.id);
-		const credits = args[1];
 
 		if (!target.id) {
 			return message.channel.send(new MessageEmbed().setDescription(`Please mention a valid user.`).setColor('RED'));
 		}
+
+		await this.client.economy.getCredits(message.guild.id, target.id);
+		const credits = args[1];
 
 		if (!this.client.utils.isWhole(args[1])) {
 			return message.channel.send(new MessageEmbed().setDescription(`Please provide a valid number of credits`).setColor('fce3b7'));
