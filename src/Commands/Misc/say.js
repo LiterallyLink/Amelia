@@ -25,7 +25,6 @@ module.exports = class extends Command {
 			argsresult = args.join(' ');
 			message.channel.send(argsresult);
 		}
-		return console.log(`${message.author.tag} used !say to say ${argsresult} in ${message.guild.name}`);
 	}
 
 };
