@@ -13,8 +13,6 @@ module.exports = class extends Command {
 	}
 
 	async run(message) {
-		if (!this.client.utils.canModifyQueue(message.member)) return;
-
 		const serverQueue = message.client.queue.get(message.guild.id);
 
 		if (!serverQueue) {
@@ -33,6 +31,7 @@ module.exports = class extends Command {
 			return;
 		}
 
+		if (!this.client.utils.canModifyQueue(message.member)) return;
 		serverQueue.loop = !serverQueue.loop;
 	}
 
