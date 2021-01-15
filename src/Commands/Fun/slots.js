@@ -1,5 +1,3 @@
-/* eslint-disable max-len */
-/* eslint-disable id-length */
 const Command = require('../../Structures/Command');
 const { MessageEmbed } = require('discord.js');
 
@@ -20,26 +18,19 @@ module.exports = class extends Command {
 
 		const slot = [];
 		const border = '---------------------';
-		const L = ':lemon:';
-		const G = ':grapes:';
-		const GE = ':gem:';
-		const F = ':four_leaf_clover:';
-		const A = ':apple:';
-		const Q = ':grey_question:';
-
-		const symbols = [L, G, GE, F, A];
+		const symbols = ['🍋', '🍇', '💎', '🍀', '🍎'];
 		const doubles = {};
-		doubles[':lemon:'] = 0.5;
-		doubles[':apple:'] = 2;
-		doubles[':four_leaf_clover:'] = 2;
-		doubles[':grapes:'] = 3.5;
-		doubles[':gem:'] = 7;
+		doubles['🍋'] = 0.5;
+		doubles['🍎'] = 2;
+		doubles['🍀'] = 2;
+		doubles['🍇'] = 3.5;
+		doubles['💎'] = 7;
 		const triples = {};
-		triples[':lemon:'] = 2.5;
-		triples[':apple:'] = 3;
-		triples[':four_leaf_clover:'] = 4;
-		triples[':grapes:'] = 7;
-		triples[':gem:'] = 15;
+		triples['🍋'] = 2.5;
+		triples['🍎'] = 3;
+		triples['🍀'] = 4;
+		triples['🍇'] = 7;
+		triples['💎'] = 15;
 
 		const randomSlots = new Array(3);
 		randomSlots.fill('<a:fruit_slot:723119681380155423>');
@@ -47,11 +38,11 @@ module.exports = class extends Command {
 
 		const slotHelp = new MessageEmbed()
 			.addField('Help', 'Slot Machine')
-			.addField('Winnings', `**${L}${L}${Q} - 0.5x\n${A}${A}${Q} - 2x\n${F}${F}${Q} - 2x\n${L}${L}${L} - 2.5x\n${A}${A}${A} - 3x\n${G}${G}${Q} - 3.5x\n${F}${F}${F} - 4x\n${GE}${GE}${Q} - 7x\n${G}${G}${G} - 7x\n${GE}${GE}${GE} - 15x**`)
+			.addField('Winnings', `**🍋🍋❔ - 0.5x\n🍎🍎❔ - 2x\n🍀🍀❔ - 2x\n🍋🍋🍋 - 2.5x\n🍎🍎🍎 - 3x\n🍇🍇❔ - 3.5x\n🍀🍀🍀 - 4x\n💎💎❔ - 7x\n🍇🍇🍇 - 7x\n💎💎💎 - 15x**`)
 			.addField('Usage', '**slots [bet]**')
 			.setColor('YELLOW');
 
-		if (!bet || isNaN(bet) || bet <= 0) {
+		if (!bet || !this.client.utils.isWhole(bet) || bet <= 0) {
 			return message.channel.send(slotHelp);
 		} else if (bet > balance) {
 			return message.channel.send(new MessageEmbed().setDescription(`You don't have enough credits.\nYou have ${balance} credits`).setColor('RED'));
@@ -74,7 +65,7 @@ module.exports = class extends Command {
 		const msg = await message.channel.send(embed);
 
 		for (let i = 0; i < 3; i++) {
-			await sleep(1666);
+			await sleep(1700);
 			slot.push(symbols[Math.floor(Math.random() * symbols.length)]);
 			randomSlots[i] = slot[i];
 			msg.edit(embed.setDescription(`**${border}\n| ${randomSlots.join(' | ')} |\n${border}\n--- SPINNING ---**`));

@@ -13,7 +13,7 @@ module.exports = class extends Command {
 
 	async run(message) {
 		const github = new MessageEmbed()
-			.setDescription(`[Amelia's Github](https://github.com/LiterallyLink/Watson-Amelia)`)
+			.setDescription(`[Amelia's Github](https://github.com/LiterallyLink/Amelia)`)
 			.setColor('fce3b7');
 
 		return message.channel.send(github);
