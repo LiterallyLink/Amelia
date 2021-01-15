@@ -30,13 +30,13 @@ module.exports = class extends Command {
 			}
 
 			if (args[0].toLowerCase() === 'enable') {
-				await GuildSchema.updateOne({
+				await economyModule.updateOne({
 					eco: true
 				});
 
 				return message.channel.send(new MessageEmbed().setDescription('The economy module is now enabled.').setColor('GREEN'));
 			} else if (args[0].toLowerCase() === 'disable') {
-				await GuildSchema.updateOne({
+				await economyModule.updateOne({
 					eco: false
 				});
 
