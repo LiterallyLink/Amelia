@@ -16,6 +16,11 @@ module.exports = class extends Command {
 
 	async run(message, args) {
 		const target = message.mentions.users.first();
+
+		if (!target) {
+			return message.channel.send(new MessageEmbed().setDescription(`Please mention a valid user.\n** **\nYou have ${userBal} credits`).setColor('RED'));
+		}
+
 		const userBal = await this.client.economy.getCredits(message.guild.id, message.author.id);
 		await this.client.economy.getCredits(message.guild.id, target.id);
 		const payment = args[1];
@@ -24,10 +29,6 @@ module.exports = class extends Command {
 
 		if (!economyModule.eco) {
 			return message.channel.send(`The economy module is currently disabled.`);
-		}
-
-		if (!target.id) {
-			return message.channel.send(new MessageEmbed().setDescription(`Please mention a valid user.\n** **\nYou have ${userBal} credits`).setColor('RED'));
 		}
 
 		if (!this.client.utils.isWhole(payment)) {
