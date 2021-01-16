@@ -465,3 +465,6 @@ node_modules/.bin/mime
 node_modules/.bin/esvalidate
 node_modules/.bin/esparse
 node_modules/.bin/eslint
+node_modules/encoding/LICENSE
+node_modules/encoding/node_modules/iconv-lite/LICENSE
+node_modules/is-stream/license
