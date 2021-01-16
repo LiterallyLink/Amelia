@@ -58,6 +58,9 @@ module.exports = class Util {
 			.setColor('RED');
 
 		if (member.voice.channel !== member.guild.me.voice.channel) {
+			console.log(member);
+			console.log(member.voice.channel);
+			console.log(member.guild.me.voice.channel);
 			member.send(resultsEmbed);
 			return false;
 		}
