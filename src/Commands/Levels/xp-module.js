@@ -30,13 +30,13 @@ module.exports = class extends Command {
 			}
 
 			if (args[0].toLowerCase() === 'enable') {
-				await GuildSchema.updateOne({
+				await xpModule.updateOne({
 					xp: true
 				});
 
 				return message.channel.send(new MessageEmbed().setDescription('XP-Module ```css\nEnabled```').setColor('GREEN'));
 			} else if (args[0].toLowerCase() === 'disable') {
-				await GuildSchema.updateOne({
+				await xpModule.updateOne({
 					xp: false
 				});
 
