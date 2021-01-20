@@ -1,9 +1,11 @@
-const path = require('path');
-const { promisify } = require('util');
-const glob = promisify(require('glob'));
 const Command = require('./Command.js');
 const Event = require('./Event.js');
 const { MessageEmbed } = require('discord.js');
+const path = require('path');
+const { promisify } = require('util');
+const glob = promisify(require('glob'));
+const mongoose = require('mongoose');
+const guildSchema = require('../Models/guildSchema.js');
 
 module.exports = class Util {
 
@@ -13,8 +15,8 @@ module.exports = class Util {
 
 	isClass(input) {
 		return typeof input === 'function' &&
-        typeof input.prototype === 'object' &&
-        input.toString().substring(0, 5) === 'class';
+            typeof input.prototype === 'object' &&
+            input.toString().substring(0, 5) === 'class';
 	}
 
 	get directory() {
@@ -58,9 +60,6 @@ module.exports = class Util {
 			.setColor('RED');
 
 		if (member.voice.channel !== member.guild.me.voice.channel) {
-			console.log(member);
-			console.log(member.voice.channel);
-			console.log(member.guild.me.voice.channel);
 			member.send(resultsEmbed);
 			return false;
 		}
@@ -73,6 +72,19 @@ module.exports = class Util {
 
 	comparePerms(member, target) {
 		return member.roles.highest.position < target.roles.highest.position;
+	}
+
+	getRole(role, guild) {
+		if (!role) return null;
+
+		if (/^[0-9]+$/.test(role)) {
+			return guild.roles.cache.get(role);
+		} else if (/^<@&[0-9]+>$/.test(role)) {
+			const id = role.substring(3, role.length - 1);
+			return guild.roles.cache.get(id);
+		}
+
+		return guild.roles.cache.find(mention => mention.name.toLowerCase() === role.toLowerCase());
 	}
 
 	formatNumber(num) {
@@ -124,6 +136,17 @@ module.exports = class Util {
 		}).format(array);
 	}
 
+	shuffle(array) {
+		const arr = array.slice(0);
+		for (let i = arr.length - 1; i >= 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			const temp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = temp;
+		}
+		return arr;
+	}
+
 	randomRange(min, max) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
@@ -150,14 +173,21 @@ module.exports = class Util {
 			target = message.member;
 		}
 
-		if (!target && message.mentions.members) { target = message.mentions.members.first(); }
+		if (!target && message.mentions.members) {
+			target = message.mentions.members.first();
+		}
 
 		if (!target && toFind) {
 			target = message.guild.members.cache.find(member => member.displayName.toLowerCase() === toFind || member.user.tag.toLowerCase() === toFind);
 		}
 
 		if (!target) {
-			return message.channel.send({ embed: { description: '<:fail:788336644792254484> Please provide a valid mention, name, or tag.', color: 'RED' } });
+			return message.channel.send({
+				embed: {
+					description: '<:fail:788336644792254484> Please provide a valid mention, name, or tag.',
+					color: 'RED'
+				}
+			});
 		}
 
 		return target;
@@ -212,6 +242,31 @@ module.exports = class Util {
 
 		--bucket.remaining;
 		return null;
+	}
+
+	async guildSchemaCreate(guild) {
+		await guildSchema.findOne({
+			guildID: guild.id
+		}, (err, server) => {
+			if (err) console.error(err);
+			if (!server) {
+				// eslint-disable-next-line new-cap
+				const newGuild = new guildSchema({
+					// eslint-disable-next-line new-cap
+					_id: mongoose.Types.ObjectId(),
+					guildID: server.id,
+					guildName: server.name,
+					prefix: this.client.prefix,
+					xp: false,
+					levelUpMsg: false,
+					eco: false
+				});
+
+				newGuild.save()
+					.then(result => console.log(result))
+					.catch(error => console.error(error));
+			}
+		});
 	}
 
 	async loadCommands() {
