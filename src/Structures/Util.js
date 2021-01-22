@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const Command = require('./Command.js');
 const Event = require('./Event.js');
 const { MessageEmbed } = require('discord.js');
@@ -87,6 +88,23 @@ module.exports = class Util {
 		return guild.roles.cache.find(mention => mention.name.toLowerCase() === role.toLowerCase());
 	}
 
+	getChannel(ch, guild) {
+		if (!ch) return null;
+
+		if (/^[0-9]+$/.test(ch)) {
+			const channel = guild.channels.cache.get(ch);
+			if (!channel || ['dm', 'voice', 'category', 'store'].includes(channel.type)) return;
+			return channel;
+		} else if (/^<#[0-9]+>$/.test(ch)) {
+			const id = ch.substring(2, ch.length - 1);
+			const channel = guild.channels.cache.get(id);
+			if (!channel || ['dm', 'voice', 'category', 'store'].includes(channel.type)) return;
+			return channel;
+		}
+
+		return guild.channels.cache.find(channel => (channel.type === 'text') && channel.name.toLowerCase() === ch);
+	}
+
 	formatNumber(num) {
 		return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 	}
@@ -147,8 +165,8 @@ module.exports = class Util {
 		return arr;
 	}
 
-	randomRange(min, max) {
-		return Math.floor(Math.random() * (max - min + 1)) + min;
+	randomRange(max) {
+		return Math.floor(Math.random() * max) + 1;
 	}
 
 	async promptMessage(message, author, time, validReactions) {

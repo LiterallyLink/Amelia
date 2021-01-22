@@ -18,7 +18,8 @@ module.exports = class extends Command {
 	}
 
 	async run(message, args) {
-		let channel = message.mentions.channels.first();
+		let channel = args[0];
+		this.client.utils.getChannel(channel, message.guild);
 		const duration = args.pop();
 		const currentDuration = new MessageEmbed();
 
