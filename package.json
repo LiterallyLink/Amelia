@@ -25,6 +25,7 @@
     "glob": "^7.1.6",
     "hangcord": "0.0.5",
     "humanize-duration": "^3.25.0",
+    "kitsu.js": "^2.0.0",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
     "mongoose": "^5.11.8",
