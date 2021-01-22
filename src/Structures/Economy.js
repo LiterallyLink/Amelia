@@ -7,42 +7,45 @@ module.exports = class Economy {
 	}
 
 	async getCredits(guildID, userID) {
-		const wallet = await Profile.findOne({ guildId: guildID, userId: userID });
-		let credits = 0;
+		const wallet = await Profile.findOne({
+			guildId: guildID,
+			userId: userID
+		});
+
+		let balance = 0;
 
 		if (wallet) {
-			// eslint-disable-next-line prefer-destructuring
-			credits = wallet.credits;
+			balance = wallet.credits;
 		} else {
 			const newData = new Profile({
 				guildId: guildID,
 				userId: userID,
-				credits: credits
+				credits: balance
 			});
 
 			await newData.save()
 				.catch(err => console.log(err));
 		}
 
-		return credits;
+		return balance;
 	}
 
 
 	async addCredits(guildID, userID, credits) {
-		const result = await Profile.findOneAndUpdate({ guildId: guildID, userId: userID },
-			{
-				guildId: guildID,
-				userId: userID,
-				$inc: {
-					credits
-				}
-			},
-			{
-				upsert: true,
-				new: true,
-				useFindAndModify: false
+		const result = await Profile.findOneAndUpdate({
+			guildId: guildID,
+			userId: userID
+		}, {
+			guildId: guildID,
+			userId: userID,
+			$inc: {
+				credits
 			}
-		);
+		}, {
+			upsert: true,
+			new: true,
+			useFindAndModify: false
+		});
 		return result.credits;
 	}
 
@@ -54,7 +57,9 @@ module.exports = class Economy {
 	}
 
 	async fetchLeaderboard(guildId, limit) {
-		var users = await Profile.find({ guildId: guildId }).sort([['credits', 'descending']]).exec();
+		const users = await Profile.find({ guildId: guildId })
+			.sort([['credits', 'descending']])
+			.exec();
 
 		return users.slice(0, limit);
 	}
