@@ -1,13 +1,11 @@
-/* eslint-disable new-cap */
 /* eslint-disable complexity */
 const Event = require('../../Structures/Event');
-const ms = require('ms');
+const Levels = require('discord-xp');
 const { MessageEmbed } = require('discord.js');
-const mongoose = require('mongoose');
 const guildSchema = require('../../Models/guildSchema.js');
 const custom = require('../../Models/customCommand.js');
 const userSchema = require('../../Models/userSchema.js');
-const Levels = require('discord-xp');
+const ms = require('ms');
 const mongoURL = require('../../../config.json');
 
 Levels.setURL(mongoURL.mongoPath);
@@ -19,27 +17,8 @@ module.exports = class extends Event {
 
 		if (message.author.bot) return;
 
-		const settings = await guildSchema.findOne({
-			guildID: message.guild.id
-		}, (err, guild) => {
-			if (err) console.error(err);
-			if (!guild) {
-				const newGuild = new guildSchema({
-					_id: mongoose.Types.ObjectId(),
-					guildID: message.guild.id,
-					guildName: message.guild.name,
-					prefix: this.client.prefix,
-					xp: false,
-					levelUpMsg: false,
-					eco: false
-				});
-
-				newGuild.save()
-					.then(result => console.log(result))
-					.catch(error => console.error(error));
-			}
-		});
-
+		this.client.utils.guildSchemaCreate(message.guild);
+		const settings = await guildSchema.findOne({ guildID: message.guild.id });
 		const prefix = message.guild ? settings.prefix : '!';
 
 		if (message.content.match(mentionRegex) && message.guild) message.channel.send(`My prefix for ${message.guild.name} is \`${prefix}\`.`);
@@ -61,13 +40,15 @@ module.exports = class extends Event {
 		const command = this.client.commands.get(cmd.toLowerCase()) || this.client.commands.get(this.client.aliases.get(cmd.toLowerCase()));
 
 		if (!command) {
-			custom.findOne({ guildID: message.guild.id, Command: message.content.slice(prefix.length) },
-				async (err, data) => {
-					if (err) throw err;
-					if (data) message.channel.send(data.Content);
-					return;
-				}
-			);
+			custom.findOne({
+				guildID: message.guild.id,
+				Command: message.content.slice(prefix.length)
+			},
+			async (err, data) => {
+				if (err) throw err;
+				if (data) message.channel.send(data.Content);
+				return;
+			});
 		}
 
 		if (command) {
@@ -86,8 +67,8 @@ module.exports = class extends Event {
 			}
 
 			if (command.args && !args.length) {
-				const embed = new MessageEmbed();
-				message.channel.send(embed.setAuthor(`${message.author.username}`, message.member.user.displayAvatarURL({ size: 4096, dynamic: true }))
+				message.channel.send(new MessageEmbed()
+					.setAuthor(`${message.author.username}`, message.member.user.displayAvatarURL({ size: 4096, dynamic: true }))
 					.setColor('fce3b7')
 					.setDescription(`<:fail:788336644792254484> Lack of arguments given.\n** **\nUsage: \`${command.usage}\``));
 				return;

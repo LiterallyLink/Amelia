@@ -92,6 +92,7 @@ module.exports = class extends Command {
 			if (lastTurnTimeout) lastTurnTimeout = false;
 			userTurn = !userTurn;
 		}
+
 		this.client.games.delete(message.channel.id);
 		if (winner === 'time') return message.channel.send(embed.setDescription('Game ended due to inactivity.').setColor('RED'));
 		return message.channel.send(winner ? embed.setDescription(`Congrats, ${winner}! You win!`).setColor('GREEN') : embed.setDescription(`It's a draw!`).setColor('fce3b7'));

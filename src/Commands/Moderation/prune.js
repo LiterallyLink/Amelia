@@ -17,7 +17,7 @@ module.exports = class extends Command {
 	}
 
 	async run(message, [toClear]) {
-		if (this.client.utils.isWhole(toClear)) {
+		if (!toClear || toClear <= 0 || toClear > 100) {
 			const ErrorEmbed = new MessageEmbed()
 				.setTitle('Youch! I bumped into an error!')
 				.setColor(0xff0000)

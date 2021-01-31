@@ -4,7 +4,6 @@ const Economy = require('./Economy.js');
 
 module.exports = class AmeliaClient extends Client {
 
-
 	constructor(options = {}) {
 		super({
 			disableMentions: 'everyone'

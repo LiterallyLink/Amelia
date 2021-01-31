@@ -17,24 +17,17 @@ module.exports = class extends Command {
 	}
 
 	async run(message, args) {
-		const mentionedMember = message.mentions.members.first();
-		args.shift();
-		const reason = args.join(' ');
-		const invalidEmbed = new MessageEmbed()
-			.setColor('RED');
-
-		if (!mentionedMember || mentionedMember === message.author.id) {
-			return message.channel.send(invalidEmbed.setDescription(`Please provide a valid user`));
-		}
-
+		const mentionedMember = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 		const mentionedPosition = mentionedMember.roles.highest.position;
 		const memberPosition = message.member.roles.highest.position;
-		const botPosition = message.guild.me.roles.highest.position;
+		const reason = args.join(' ');
+		// const botPosition = message.guild.me.roles.highest.position;
 
-		if (memberPosition <= mentionedPosition) {
-			return message.channel.send(invalidEmbed.setDescription(`You cannot kick this user as their permissions are equal to your own.`));
-		} else if (botPosition <= mentionedPosition) {
-			return message.channel.send(invalidEmbed.setDescription(`I cannot kick this user, as their permissions are equal to my own.`));
+		if (message.author.id !== message.guild.ownerID) {
+			const hasPermission = this.client.utils.comparePerms(mentionedPosition, memberPosition);
+			if (!hasPermission) {
+				message.channel.send(new MessageEmbed().setDescription(hasPermission));
+			}
 		}
 
 		const embed = new MessageEmbed()

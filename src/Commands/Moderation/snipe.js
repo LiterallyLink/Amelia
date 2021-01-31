@@ -5,18 +5,17 @@ module.exports = class extends Command {
 
 	constructor(...args) {
 		super(...args, {
-			description: 'Retrieves the previously deleted message.',
+			description: 'Retrieves the most recent deleted message.',
 			category: 'Moderation',
 			guildOnly: true
 		});
 	}
 
 	async run(message) {
-		const error = new MessageEmbed();
 		const msg = this.client.snipes.get(message.channel.id);
 
 		if (!msg) {
-			return message.channel.send(error.setColor('RED').setDescription('No messages to retrieve.'));
+			return message.channel.send(new MessageEmbed().setColor('RED').setDescription('No messages to retrieve.'));
 		}
 
 		const embed = new MessageEmbed()

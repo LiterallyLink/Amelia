@@ -21,7 +21,7 @@ module.exports = class extends Command {
 		}
 
 		await this.client.economy.getCredits(message.guild.id, target.id);
-		const credits = args.shift();
+		const credits = args[1];
 
 		if (!this.client.utils.isWhole(credits)) {
 			return message.channel.send(new MessageEmbed().setDescription(`Please provide a valid number of credits`).setColor('fce3b7'));

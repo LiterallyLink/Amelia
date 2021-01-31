@@ -26,7 +26,6 @@ module.exports = class extends Command {
 		if (activity.toUpperCase() === 'STREAMING') {
 			const givenURL = args.pop();
 			const streamStatus = args.slice(1).join(' ');
-			console.log(givenURL, streamStatus);
 			return this.client.user.setActivity(`${streamStatus}`, { type: 'STREAMING', url: `${givenURL}` });
 		}
 

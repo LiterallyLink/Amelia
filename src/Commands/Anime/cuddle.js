@@ -26,7 +26,7 @@ module.exports = class extends Command {
 
 		const cuddle = new MessageEmbed()
 			.setImage(body.url)
-			.setDescription(`${user} was cuddled by ${message.author}. How sweet.`)
+			.setDescription(`${user} was cuddled by ${message.author}! How sweet.`)
 			.setColor('fce3b7');
 		return message.channel.send(cuddle);
 	}
